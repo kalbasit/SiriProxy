@@ -1,4 +1,4 @@
-$:.push File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+$:.push File.expand_path('../../lib', __FILE__)
 require 'siriproxy'
 
 RSpec.configure do |config|
@@ -17,4 +17,4 @@ RSpec.configure do |config|
 end
 
 # Include support files.
-Dir["#{VIMIUS_SPEC_PATH}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname __FILE__}/support/**/*.rb"].each { |f| require f }
