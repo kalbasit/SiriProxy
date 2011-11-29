@@ -1,4 +1,4 @@
-script: 'ci/travis.rb'
+before_script: "mkdir ~/.siriproxy; cp ci/config.yml ~/.siriproxy"
 branches:
   only:
     - rspec
