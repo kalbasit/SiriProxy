@@ -2,6 +2,10 @@ require 'eventmachine'
 require 'zlib'
 require 'pp'
 
+require 'siriproxy/connection'
+require 'siriproxy/connection/iphone'
+require 'siriproxy/connection/guzzoni'
+
 class String
   def to_hex(seperator=" ")
     bytes.to_a.map{|i| i.to_s(16).rjust(2, '0')}.join(seperator)
