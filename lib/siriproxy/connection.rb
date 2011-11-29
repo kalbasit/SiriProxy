@@ -4,7 +4,10 @@ require 'siriproxy/interpret_siri'
 class SiriProxy::Connection < EventMachine::Connection
   include EventMachine::Protocols::LineText2
 
-  attr_accessor :other_connection, :name, :ssled, :output_buffer, :input_buffer, :processed_headers, :unzip_stream, :zip_stream, :consumed_ace, :unzipped_input, :unzipped_output, :last_ref_id, :plugin_manager
+  attr_accessor :other_connection, :name, :ssled, :output_buffer,
+                :input_buffer, :processed_headers, :unzip_stream,
+                :zip_stream, :consumed_ace, :unzipped_input,
+                :unzipped_output, :last_ref_id, :plugin_manager
 
   def last_ref_id=(ref_id)
     @last_ref_id = ref_id
