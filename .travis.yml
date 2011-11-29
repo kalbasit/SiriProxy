@@ -7,5 +7,6 @@ branches:
 rvm:
   - 1.9.3
 notifications:
+  irc: "irc.freenode.org#siriproxy"
   recipients:
     - wael.nasreddine@gmail.com
