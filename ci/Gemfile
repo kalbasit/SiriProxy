@@ -1,5 +1,0 @@
-source :gemcutter
-
-gemspec
-
-gem 'cora', :git => "git://github.com/chendo/cora.git"
