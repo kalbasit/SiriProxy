@@ -1,0 +1,10 @@
+script: 'ci/travis.rb'
+gemfile: 'ci/Gemfile'
+branches:
+  only:
+    - rspec
+rvm:
+  - 1.9.3
+notifications:
+  recipients:
+    - wael.nasreddine@gmail.com
