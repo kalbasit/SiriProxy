@@ -22,7 +22,7 @@ class SiriProxy::Connection::Iphone < SiriProxy::Connection
     other_connection.other_connection = self #hehe
     other_connection.plugin_manager = plugin_manager
   end
-  
+
   def received_object(object)
     object
     #plugin_manager.object_from_client(object, self)

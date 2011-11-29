@@ -20,7 +20,7 @@ Commands:
 server            Start up the Siri proxy server
 gencerts          Generate a the certificates needed for SiriProxy
 bundle            Install any dependancies needed by plugins
-console           Launch the plugin test console 
+console           Launch the plugin test console
 update [dir]      Updates to the latest code from GitHub or from a provided directory
 help              Show this usage information
 
@@ -46,7 +46,7 @@ Options:
 
   def run_console
     load_code
-    $LOG_LEVEL = 0 
+    $LOG_LEVEL = 0
     # this is ugly, but works for now
     SiriProxy::PluginManager.class_eval do
       def respond(text, options={})
@@ -110,16 +110,16 @@ Options:
       puts "=== Bundling ===" if $?.exitstatus == 0
       puts `siriproxy bundle` if $?.exitstatus == 0
       puts "=== SUCCESS ===" if $?.exitstatus == 0
-      
+
       exit $?.exitstatus
     else
       branch_opt = @branch ? "-b #{@branch}" : ""
       @branch = "master" if @branch == nil
       puts "=== Installing latest code from git://github.com/plamoni/SiriProxy.git [#{@branch}] ==="
 
-	  tmp_dir = "/tmp/SiriProxy.install." + (rand 9999).to_s.rjust(4, "0")
+      tmp_dir = "/tmp/SiriProxy.install." + (rand 9999).to_s.rjust(4, "0")
 
-	  `mkdir -p #{tmp_dir}`
+      `mkdir -p #{tmp_dir}`
       puts `git clone #{branch_opt} git://github.com/plamoni/SiriProxy.git #{tmp_dir}`  if $?.exitstatus == 0
       puts "=== Performing Rake Install ===" if $?.exitstatus == 0
       puts `cd #{tmp_dir} && rake install`  if $?.exitstatus == 0
@@ -129,7 +129,7 @@ Options:
       puts "=== SUCCESS ===" if $?.exitstatus == 0
 
       exit $?.exitstatus
-    end 
+    end
   end
 
   def usage
@@ -137,7 +137,7 @@ Options:
   end
 
   private
-  
+
   def parse_options
     $APP_CONFIG = OpenStruct.new(YAML.load_file(File.expand_path('~/.siriproxy/config.yml')))
     @branch = nil
