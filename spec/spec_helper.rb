@@ -20,4 +20,4 @@ RSpec.configure do |config|
 end
 
 # Include support files.
-Dir["#{File.dirname __FILE__}/support/**/*.rb"].each { |f| require f }
+Dir["#{SPEC_PATH}/support/**/*.rb"].each { |f| require f }
