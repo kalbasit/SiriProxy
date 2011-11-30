@@ -6,6 +6,9 @@ describe SiriProxy::Connection do
 
   before(:each) do
     @name = "__test_connection"
+    @ace  = File.read(File.join(FIXTURES_PATH, 'ace.bin'))
+    @data = File.read(File.join(FIXTURES_PATH, 'bin_with_ace.bin'))
+    @data_without_ace = File.read(File.join(FIXTURES_PATH, 'bin_without_ace.bin'))
     subject.send :instance_variable_set, :@name, @name
   end
 
@@ -158,10 +161,6 @@ describe SiriProxy::Connection do
     before(:each) do
       subject.stubs(:process_compressed_data)
       subject.stubs(:flush_output_buffer)
-
-      @ace  = File.read(File.join(FIXTURES_PATH, 'ace.bin'))
-      @data = File.read(File.join(FIXTURES_PATH, 'bin_with_ace.bin'))
-      @data_without_ace = File.read(File.join(FIXTURES_PATH, 'bin_without_ace.bin'))
     end
 
     context "ace not removed" do
@@ -234,7 +233,97 @@ describe SiriProxy::Connection do
   end
 
   context "#flush_output_buffer" do
+    context 'without output buffer' do
+      it "should return if output buffer is empty" do
+        subject.output_buffer = ""
 
+        subject.flush_output_buffer.should be_nil
+      end
+
+      it "should not call other_connection" do
+        subject.expects(:other_connection).never
+
+        subject.flush_output_buffer
+      end
+    end
+
+    context 'with output buffer' do
+      before(:each) do
+        subject.output_buffer = @ace
+        @other_connection = mock "other connection"
+        @other_connection.stubs(:ssled).returns(false)
+        @other_connection.stubs(:send_data)
+        @other_connection.stubs(:name).returns("__test_other_connection")
+
+        subject.stubs(:other_connection).returns(@other_connection)
+      end
+
+      context "other connection ssled" do
+        before(:each) do
+          @other_connection.stubs(:ssled).returns(true)
+        end
+
+        it "should check if the other connection is ssled" do
+          @other_connection.expects(:ssled).returns(true).once
+
+          subject.flush_output_buffer
+        end
+
+        it "should not puts a message if LOG_LEVEL is <= 5" do
+          $LOG_LEVEL = 5
+
+          capture(:stdout) { subject.flush_output_buffer }.
+            should_not puts "[Debug - #{@name}] Forwarding #{@ace.length} bytes of data to #{@other_connection.name}"
+        end
+
+        it "should puts a message if LOG_LEVEL is > 5" do
+          $LOG_LEVEL = 6
+
+          capture(:stdout) { subject.flush_output_buffer }.
+            should puts "[Debug - #{@name}] Forwarding #{@ace.length} bytes of data to #{@other_connection.name}"
+        end
+
+        it "should call other_connection.send_data(output_buffer)" do
+          @other_connection.expects(:send_data).with(@ace).once
+
+          subject.flush_output_buffer
+        end
+
+        it "should clear out the output buffer" do
+          subject.flush_output_buffer
+
+          subject.output_buffer.should be_empty
+        end
+      end
+
+      context "other connection not ssled" do
+        it "should puts a message if LOG_LEVEL <= 5" do
+          $LOG_LEVEL = 5
+
+          capture(:stdout) { subject.flush_output_buffer }.
+            should_not puts "[Debug - #{@name}] Buffering some data for later (#{@ace.length} bytes buffered)"
+        end
+
+        it "should puts a message if LOG_LEVEL is greater than 5" do
+          $LOG_LEVEL = 6
+
+          capture(:stdout) { subject.flush_output_buffer }.
+            should puts "[Debug - #{@name}] Buffering some data for later (#{@ace.length} bytes buffered)"
+        end
+
+        it "should not clear out the buffer" do
+          subject.flush_output_buffer
+
+          subject.output_buffer.should == @ace
+        end
+
+        it "should not call other_connection.send_data(output_buffer)" do
+          @other_connection.expects(:send_data).with(@ace).never
+
+          subject.flush_output_buffer
+        end
+      end
+    end
   end
 
   context "#process_compressed_data" do
