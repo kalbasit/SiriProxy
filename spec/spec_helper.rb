@@ -1,6 +1,9 @@
 $:.push File.expand_path('../../lib', __FILE__)
 require 'siriproxy'
 
+SPEC_PATH = File.expand_path('../', __FILE__)
+FIXTURES_PATH = File.join SPEC_PATH, 'fixtures'
+
 RSpec.configure do |config|
   def config.escaped_path(*parts)
     Regexp.compile(parts.join('[\\\/]'))

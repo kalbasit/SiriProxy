@@ -159,8 +159,31 @@ describe SiriProxy::Connection do
       subject.stubs(:process_compressed_data)
       subject.stubs(:flush_output_buffer)
 
-      @data_to_consume = 0xAACCEE02
-      @data = ""
+      @ace  = File.read(File.join(FIXTURES_PATH, 'ace.bin'))
+      @data = File.read(File.join(FIXTURES_PATH, 'bin_with_ace.bin'))
+      @data_without_ace = File.read(File.join(FIXTURES_PATH, 'bin_without_ace.bin'))
+    end
+
+    context "ace not removed" do
+      before(:each) do
+        subject.receive_binary_data @data
+      end
+
+      it "should add it to input_buffer" do
+        subject.input_buffer.should_not be_empty
+      end
+
+      it "should set remove the ace from the input_buffer" do
+        subject.input_buffer.should == @data_without_ace
+      end
+
+      it "should append the ace to the output buffer" do
+        subject.output_buffer.should include @ace
+      end
+
+      it "should set consumed_ace to true" do
+        subject.consumed_ace.should be_true
+      end
     end
   end
 end
