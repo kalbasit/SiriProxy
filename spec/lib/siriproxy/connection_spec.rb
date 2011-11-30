@@ -165,24 +165,70 @@ describe SiriProxy::Connection do
     end
 
     context "ace not removed" do
-      before(:each) do
-        subject.receive_binary_data @data
-      end
-
       it "should add it to input_buffer" do
+        subject.receive_binary_data @data
+
         subject.input_buffer.should_not be_empty
       end
 
       it "should set remove the ace from the input_buffer" do
+        subject.receive_binary_data @data
+
         subject.input_buffer.should == @data_without_ace
       end
 
       it "should append the ace to the output buffer" do
+        subject.receive_binary_data @data
+
         subject.output_buffer.should include @ace
       end
 
       it "should set consumed_ace to true" do
+        subject.receive_binary_data @data
+
         subject.consumed_ace.should be_true
+      end
+
+      it "should call process_compressed_data" do
+        subject.expects(:process_compressed_data).once
+
+        subject.receive_binary_data @data
+      end
+
+      it "should call flush_output_buffer" do
+        subject.expects(:flush_output_buffer).once
+
+        subject.receive_binary_data @data
+      end
+    end
+
+    context "ace removed" do
+      before(:each) do
+        subject.consumed_ace = true
+      end
+
+      it "should add data to input_buffer unmodified" do
+        subject.receive_binary_data @data_without_ace
+
+        subject.input_buffer.should == @data_without_ace
+      end
+
+      it "should not touch the output buffer" do
+        subject.receive_binary_data @data_without_ace
+
+        subject.output_buffer.should be_empty
+      end
+
+      it "should call process_compressed_data" do
+        subject.expects(:process_compressed_data).once
+
+        subject.receive_binary_data @data
+      end
+
+      it "should call flush_output_buffer" do
+        subject.expects(:flush_output_buffer).once
+
+        subject.receive_binary_data @data
       end
     end
   end
