@@ -232,4 +232,40 @@ describe SiriProxy::Connection do
       end
     end
   end
+
+  context "#flush_output_buffer" do
+
+  end
+
+  context "#process_compressed_data" do
+
+  end
+
+  context "#has_next_object?" do
+
+  end
+
+  context "#read_next_object_from_unzipped" do
+
+  end
+
+  context "#parse_object" do
+
+  end
+
+  context "#inject_object_to_output_stream" do
+
+  end
+
+  context "#flush_unzipped_output" do
+
+  end
+
+  context "#prep_received_object" do
+
+  end
+
+  context "#received_object" do
+
+  end
 end
