@@ -355,6 +355,9 @@ describe SiriProxy::Connection do
   end
 
   context "#received_object" do
-
+    it "should just return the argument passed to it" do
+      obj = mock "some object"
+      subject.received_object(obj).should eq obj
+    end
   end
 end
