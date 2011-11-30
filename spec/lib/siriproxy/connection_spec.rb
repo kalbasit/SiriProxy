@@ -162,7 +162,5 @@ describe SiriProxy::Connection do
       @data_to_consume = 0xAACCEE02
       @data = ""
     end
-
-    it { false.should be_true }
   end
 end
